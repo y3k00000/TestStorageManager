@@ -43,9 +43,9 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode==Activity.RESULT_OK){
-            contentResolver.takePersistableUriPermission(data!!.getData(),
+            contentResolver.takePersistableUriPermission(data!!.data!!,
                 Intent.FLAG_GRANT_READ_URI_PERMISSION + Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            val newMp4File = DocumentFile.fromTreeUri(this,data.data)!!.createFile("video/mp4","small")
+            val newMp4File = DocumentFile.fromTreeUri(this,data.data!!)!!.createFile("video/mp4","small")
             thread {
                 val assetInputStream = assets.open("small.mp4")
                 val mp4OutputStream = contentResolver.openOutputStream(newMp4File!!.uri)
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 mp4OutputStream.close()
                 assetInputStream.close()
                 runOnUiThread {
-                    Toast.makeText(this, "Write OK!!", Toast.LENGTH_SHORT).show()
+                    hello.text = "small.mp4 file written"
                 }
             }
         } else{
